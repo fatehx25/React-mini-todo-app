@@ -1,10 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
-  let todos = 0;
   const [todoList, setTodoList] = useState([]);
+  
+  //const todos = todoList.length; 
+  //const n = String(todos);
+
+  // useEffect(() => {
+  //   console.log(`todos:`, todos);
+  // }, [todos]);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -26,27 +33,39 @@ function App() {
           Learn React
         </a>
         <ul id="todoContainer">
-          {todoList}
+          { 
+            todoList?.map((item, n) => {
+              return (
+                <li id={"todo_" + n}>
+                  <span id={"text_" + n}> {item} </span>
+                  <button id={"del_" + n} onClick={ delItem }>delete</button>
+                </li>
+              );
+            }) 
+          }
         </ul>
       </header>
     </div>
   );
   function addTodo(e) {
-    console.log("It works");
     const input = e.target.value;
-    if (input.length) return;
-    todos++;
-    const n = String(todos);
-    const temp = [...todoList];     
-    // make a todo element and update list
-    (
-      <div id={"todo_" + n}>
-        <span id={"text_" + n}> {input} </span>
-      </div>
-    ).push(temp);
-    console.log(temp);
+    console.log("It worked!", input.length); //<--
+    if (!(input.length)) return;
+
+    const temp = [...todoList];
+    temp.push(input);
+    setTodoList(temp); 
+    console.log(temp); //<--
+    e.target.value = '';
+  }
+
+  function delItem(e) {
+    console.log(e.target.id);
+    const index = Number(e.target.id.slice(4));
+    const temp = [...todoList];
+    temp.splice(index, 1);
     setTodoList(temp);
-  } 
+  }
 }
 
 export default App;
